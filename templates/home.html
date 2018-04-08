@@ -42,15 +42,6 @@
             </fieldset>
         </form>
         <form method="POST">
-            {{ dform.hidden_tag() }}
-            <fieldset>
-                <legend>Delete Contact</legend>
-                {{ dform.name.label }}<br>
-                {{ dform.name }}<br>
-                {{ dform.delete }}
-            </fieldset>
-        </form>
-        <form method="POST">
             {{ sform.hidden_tag() }}
             <fieldset>
                 <legend>Search Contact</legend>
@@ -60,6 +51,15 @@
                 {{ sform.number.label }}<br>
                 {{ sform.number }}<br><br>
                 {{ sform.search }}
+            </fieldset>
+        </form>
+        <form method="POST">
+            {{ dform.hidden_tag() }}
+            <fieldset>
+                <legend>Delete Contact</legend>
+                {{ dform.name.label }}<br>
+                {{ dform.name }}<br>
+                {{ dform.delete }}
             </fieldset>
         </form>
         <form method="POST">
