@@ -2,11 +2,14 @@ from flask import Flask, render_template, redirect
 from pymongo import MongoClient
 from classes import *
 import re
+import os
 
 # config system
 app = Flask(__name__)
 app.config.update(dict(SECRET_KEY='yoursecretkey'))
-client = MongoClient('localhost:27017')
+MONGO_URL = os.environ.get('MONGODB_URI') 
+client = MongoClient(MONGO_URL)
+#client = MongoClient('localhost:27017')
 db = client.TaskManager
 session = {'search':False, 'data':[], 'message':''}
 
