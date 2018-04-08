@@ -10,7 +10,7 @@ app.config.update(dict(SECRET_KEY='yoursecretkey'))
 MONGO_URL = os.environ.get('MONGODB_URI') 
 client = MongoClient(MONGO_URL)
 #client = MongoClient('localhost:27017')
-db = client.TaskManager
+db = client.heroku_kwvpv399
 session = {'search':False, 'data':[], 'message':''}
 
 if db.settings.find({'name': 'task_id'}).count() <= 0:
