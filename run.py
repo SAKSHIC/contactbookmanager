@@ -1,12 +1,14 @@
 from flask import Flask, render_template, redirect
 from pymongo import MongoClient
 from classes import *
+import re
 
 # config system
 app = Flask(__name__)
 app.config.update(dict(SECRET_KEY='yoursecretkey'))
 client = MongoClient('localhost:27017')
 db = client.TaskManager
+session = {'search':False, 'data':[], 'message':''}
 
 if db.settings.find({'name': 'task_id'}).count() <= 0:
     print("task_id Not found, creating....")
@@ -21,41 +23,60 @@ def updateTaskID(value):
             {'value':task_id}
         })
 
-def createTask(form):
-    title = form.title.data
-    priority = form.priority.data
-    shortdesc = form.shortdesc.data
+def addContact(form):
+    number = form.number.data
+    name = form.name.data
     task_id = db.settings.find_one()['value']
+    print task_id
     
-    task = {'id':task_id, 'title':title, 'shortdesc':shortdesc, 'priority':priority}
+    task = {'id':task_id, 'number':number, 'name':name}
 
     db.tasks.insert_one(task)
     updateTaskID(1)
     return redirect('/')
 
-def deleteTask(form):
-    key = form.key.data
-    title = form.title.data
+def deleteContact(form):
+    name = form.name.data
 
-    if(key):
-        print(key, type(key))
-        db.tasks.delete_many({'id':int(key)})
-    else:
-        db.tasks.delete_many({'title':title})
+    db.tasks.delete_many({'name':name})
 
     return redirect('/')
 
-def updateTask(form):
-    key = form.key.data
-    shortdesc = form.shortdesc.data
+def updateContact(form):
+    key = form.number.data
+    name = form.name.data
     
     db.tasks.update_one(
-        {"id": int(key)},
+        {"number": key},
         {"$set":
-            {"shortdesc": shortdesc}
+            {"name": name}
         }
     )
 
+    return redirect('/')
+
+def searchContact(form):
+    print "I am here"
+    name = form.name.data
+    number = form.number.data
+    
+    sdata = []
+    if(name):
+        print "/"+name+"/i"
+        docs = db.tasks.find(
+                   {"name":{ '$regex': name }}
+               )
+    else:
+        docs = db.tasks.find(
+                   {"number":{ '$regex': number }}
+               )
+    print docs
+    for i in docs:
+        sdata.append(i)
+    session['search'] = True
+    session['data'] = sdata
+    session['message'] = 'No data found.'
+    print sdata
     return redirect('/')
 
 def resetTask(form):
@@ -67,29 +88,38 @@ def resetTask(form):
 @app.route('/', methods=['GET','POST'])
 def main():
     # create form
-    cform = CreateTask(prefix='cform')
-    dform = DeleteTask(prefix='dform')
-    uform = UpdateTask(prefix='uform')
+    cform = AddContact(prefix='cform')
+    dform = DeleteContact(prefix='dform')
+    uform = UpdateContact(prefix='uform')
+    sform = SearchContact(prefix='sform')
     reset = ResetTask(prefix='reset')
 
     # response
-    if cform.validate_on_submit() and cform.create.data:
-        return createTask(cform)
+    if cform.validate_on_submit() and cform.add.data:
+        return addContact(cform)
     if dform.validate_on_submit() and dform.delete.data:
-        return deleteTask(dform)
+        return deleteContact(dform)
     if uform.validate_on_submit() and uform.update.data:
-        return updateTask(uform)
+        return updateContact(uform)
+    if sform.validate_on_submit() and sform.search.data:
+        return searchContact(sform)
     if reset.validate_on_submit() and reset.reset.data:
         return resetTask(reset)
 
     # read all data
-    docs = db.tasks.find()
     data = []
-    for i in docs:
-        data.append(i)
+    if(session['search']):
+        data = session['data']
+        session['search'] = False
+        session['data'] = ''
+    else:
+        docs = db.tasks.find()
+        data = []
+        for i in docs:
+             data.append(i)
 
     return render_template('home.html', cform = cform, dform = dform, uform = uform, \
-            data = data, reset = reset)
+            sform = sform, data = data, reset = reset)
 
 if __name__=='__main__':
     app.run(debug=True)

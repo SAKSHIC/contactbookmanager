@@ -1,11 +1,11 @@
 <html>
   <head>
-    <title>Simple Task Manager</title>
+    <title>Contact Manager</title>
     <style>
         .newspaper {
-            -webkit-column-count: 3; /* Chrome, Safari, Opera */
-            -moz-column-count: 3; /* Firefox */
-            column-count: 3;
+            -webkit-column-count: 4; /* Chrome, Safari, Opera */
+            -moz-column-count: 4; /* Firefox */
+            column-count: 4;
         }
         .head {
             text-align: center;
@@ -14,45 +14,52 @@
   </head>
   <body>
     <div class="head">
-        <h1>SIMPLE TASK MANAGER</h1>
+        <h1>CONTACT MANAGER</h1>
         <h2>using MongoDB</h2>
     </div>
     <div class="newspaper">
         <form method="POST">
             {{ cform.hidden_tag() }}
             <fieldset>
-                <legend>Create Task</legend>
-                {{ cform.title.label }}<br>
-                {{ cform.title }}<br>
-                {{ cform.shortdesc.label }}<br>
-                {{ cform.shortdesc }}<br>
-                {{ cform.priority.label }}<br>
-                {{ cform.priority }}<br><br>
-                {{ cform.create }}
+                <legend>Add Contact</legend>
+                {{ cform.number.label }}<br>
+                {{ cform.number }}<br>
+                {{ cform.name.label }}<br>
+                {{ cform.name }}<br>
+                {{ cform.add }}
             </fieldset>
         </form>
         <form  method="POST">
             {{ uform.hidden_tag() }}
             <fieldset>
-                <legend>Update Description task</legend>
-                {{ uform.key.label }}<br>
-                {{ uform.key }}<br><br>
+                <legend>Update Contact</legend>
+                {{ uform.number.label }}<br>
+                {{ uform.number }}<br><br>
                 Set Update<br><br>
-                {{ uform.shortdesc.label }}<br>
-                {{ uform.shortdesc }}<br>
+                {{ uform.name.label }}<br>
+                {{ uform.name }}<br>
                 {{ uform.update }}
             </fieldset>
         </form>
         <form method="POST">
             {{ dform.hidden_tag() }}
             <fieldset>
-                <legend>Delete Task</legend>
-                {{ dform.key.label }}<br>
-                {{ dform.key }}<br>
-                <br>OR<br><br>
-                {{ dform.title.label }}<br>
-                {{ dform.title }}<br><br>
+                <legend>Delete Contact</legend>
+                {{ dform.name.label }}<br>
+                {{ dform.name }}<br>
                 {{ dform.delete }}
+            </fieldset>
+        </form>
+        <form method="POST">
+            {{ sform.hidden_tag() }}
+            <fieldset>
+                <legend>Search Contact</legend>
+                {{ sform.name.label }}<br>
+                {{ sform.name }}<br>
+                <br>OR<br><br>
+                {{ sform.number.label }}<br>
+                {{ sform.number }}<br><br>
+                {{ sform.search }}
             </fieldset>
         </form>
         <form method="POST">
@@ -62,12 +69,11 @@
     </div>
     <br>
     <br>
-    <b>Tasks List:</b><br><br>
+    <b>Contacts List:</b><br><br>
     {% for i in data %}
         ID = {{ i["id"] }} <br>
-        Title = {{ i["title"] }}<br>
-        Short Description = {{ i["shortdesc"] }} <br>
-        Priority = {{ i["priority"] }}<br><br>
+        Contact Name = {{ i["name"] }}<br>
+        Contact Number = {{ i["number"] }} <br>
     {% endfor %}
   </body>
 </html>

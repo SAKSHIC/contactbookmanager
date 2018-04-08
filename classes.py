@@ -1,21 +1,24 @@
 from flask_wtf import FlaskForm
 from wtforms import TextField, IntegerField, SubmitField
 
-class CreateTask(FlaskForm):
-    title = TextField('Task Title')
-    shortdesc = TextField('Short Description')
-    priority = IntegerField('Priority')
-    create = SubmitField('Create')
+class AddContact(FlaskForm):
+    number = TextField('Contact Number')
+    name = TextField('Contact Name')
+    add = SubmitField('Add')
 
-class DeleteTask(FlaskForm):
-    key = TextField('Task ID')
-    title = TextField('Task Title')
+class DeleteContact(FlaskForm):
+    name = TextField('Contact Name')
     delete = SubmitField('Delete')
 
-class UpdateTask(FlaskForm):
-    key = TextField('Task Key')
-    shortdesc = TextField('Short Description')
+class UpdateContact(FlaskForm):
+    number = TextField('Contact Number')
+    name = TextField('Contact Name')
     update = SubmitField('Update')
+
+class SearchContact(FlaskForm):
+    number = TextField('Contact Number')
+    name = TextField('Contact Name')
+    search = SubmitField('Search')
 
 class ResetTask(FlaskForm):
     reset = SubmitField('Reset')
