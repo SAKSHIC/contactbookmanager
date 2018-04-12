@@ -120,7 +120,7 @@ def searchContact(form):
         sdata.append(i)
     session['search'] = True
     session['data'] = sdata
-    if len(sdata) > 0:
+    if len(sdata) <= 0:
        session['message'] = 'No data found.'
     return redirect('/')
 
