@@ -103,7 +103,6 @@ def rest_put_contact():
     return jsonify({'result': session['update'], 'message':session['message']})
 
 def searchContact(form):
-    print "I am here"
     name = form.name.data
     number = form.number.data
     
@@ -117,13 +116,12 @@ def searchContact(form):
         docs = db.tasks.find(
                    {"number":{ '$regex': number }}
                )
-    print docs
     for i in docs:
         sdata.append(i)
     session['search'] = True
     session['data'] = sdata
-    session['message'] = 'No data found.'
-    print sdata
+    if len(sdata) > 0:
+       session['message'] = 'No data found.'
     return redirect('/')
 
 def resetTask(form):
